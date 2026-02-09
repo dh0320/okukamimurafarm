@@ -104,8 +104,9 @@
             --text: #D1D5DB;
             --muted: #9CA3AF;
             --border: #374151;
-            --primary: #8A2E2E; /* Green becomes Blood Red */
-            --primary-2: #601818;
+            --primary: #8C7A52; /* Eerie sepia */
+            --primary-2: #6F603F;
+            --accent: #CBBF94;
             filter: contrast(1.2) grayscale(0.8);
         }
 
@@ -121,14 +122,14 @@
             100% { clip-path: inset(58% 0 43% 0); transform: skew(0.6deg); }
         }
 
-        /* 赤黒いオーバーレイとノイズ */
+        /* 不気味な暗色オーバーレイとノイズ */
         .horror-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: rgba(20, 0, 0, 0.85);
+            background-color: rgba(8, 10, 6, 0.82);
             z-index: 9999;
             pointer-events: none;
             display: flex;
@@ -296,6 +297,25 @@
           justify-content: center;
           padding: 24px;     /* ←ここが当たり判定。好みで 12〜28px */
           line-height: 1;
+        }
+
+        /* Ending page fade-in animation */
+        @keyframes ending-fade-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .ending-fade-in {
+            opacity: 0;
+            animation: ending-fade-up 0.8s ease-out forwards;
+        }
+
+        /* Page transition */
+        @keyframes page-fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .page-fade-in {
+            animation: page-fade-in 0.35s ease-out;
         }
 
     </style>
@@ -554,7 +574,7 @@
         const PHASE1_FLAGS = ['F01', 'F04', 'F15', 'F16'];          // 2つ以上でPhase2
         const PHASE2_FLAGS = ['F02', 'F03', 'F11', 'F12'];          // 3つ以上でPhase3
         const PHASE3_FLAGS = ['F05', 'F06', 'F07', 'F08', 'F14'];   // 3つ以上でPhase4
-        const PHASE4_FLAGS = ['F09', 'F10', 'F13'];                 // 表示用（デバッグ用）
+        const PHASE4_FLAGS = ['F09', 'F10', 'F13'];                 // Phase4で主に収集するフラグ
 
         const countFound = (flags, ids) => ids.reduce((acc, id) => acc + (flags[id] ? 1 : 0), 0);
 
@@ -566,6 +586,7 @@
             // Phase1フラグ2つ以上でPhase2
             // Phase2フラグ3つ以上でPhase3
             // Phase3フラグ3つ以上でPhase4
+            // Phase4フラグは進行判定には使わず、Phase4内の収集対象として扱う
             if (p3 >= 3) return 4;
             if (p2 >= 3) return 3;
             if (p1 >= 2) return 2;
@@ -644,7 +665,7 @@
             const containerClass = isNotepad
                 ? "bg-[#fffdf3] text-text border border-[#e6dccf] font-mono text-left"
                 : (isHorror
-                    ? "bg-black text-red-600 border-4 border-red-900 font-handwriting text-center"
+                    ? "bg-black text-[#d9d2b6] border-4 border-[#7a6f4a] font-handwriting text-center"
                     : "bg-white text-text border border-gray-200 text-center"
                 );
 
@@ -701,7 +722,7 @@
                                     isNotepad
                                         ? "bg-text text-white hover:bg-primary"
                                         : (isHorror
-                                            ? "bg-red-900 text-black hover:bg-red-700"
+                                            ? "bg-[#5f5438] text-[#f5f1de] hover:bg-[#7a6f4a]"
                                             : "bg-primary text-white hover:bg-primary-2"
                                         )
                                 }`}
@@ -723,7 +744,7 @@
                     <div
                         className={`rounded-lg shadow-2xl border p-4 pr-10 relative ${
                             isHorror
-                                ? "bg-black text-red-600 border-red-900 font-handwriting"
+                                ? "bg-black text-[#d9d2b6] border-[#7a6f4a] font-handwriting"
                                 : "bg-white text-text border-border"
                         }`}
                     >
@@ -738,7 +759,7 @@
                         <button
                             onClick={onClose}
                             className={`absolute top-2 right-3 text-sm leading-none ${
-                                isHorror ? "text-red-300 hover:text-red-500" : "text-muted hover:text-text"
+                                isHorror ? "text-[#cbbf94] hover:text-[#f0e4bc]" : "text-muted hover:text-text"
                             }`}
                             aria-label="close"
                             title="閉じる"
@@ -770,7 +791,7 @@
                     <div
                         className={`p-8 rounded-lg shadow-2xl max-w-md w-full text-center relative animate-fade-up ${
                             isHorror
-                                ? "bg-black text-red-600 border-4 border-red-900 font-handwriting"
+                                ? "bg-black text-[#d9d2b6] border-4 border-[#7a6f4a] font-handwriting"
                                 : "bg-white text-text border border-gray-200"
                         }`}
                         onClick={(e) => e.stopPropagation()}
@@ -788,7 +809,7 @@
                             <button
                                 className={`px-6 py-3 rounded-full transition-colors font-bold text-sm ${
                                     isHorror
-                                        ? "bg-black text-red-300 border border-red-900 hover:bg-red-900 hover:text-black"
+                                        ? "bg-black text-[#cbbf94] border border-[#7a6f4a] hover:bg-[#7a6f4a] hover:text-[#f5f1de]"
                                         : "bg-gray-200 text-text hover:bg-gray-300"
                                 }`}
                                 onClick={onNo}
@@ -799,7 +820,7 @@
                             <button
                                 className={`px-6 py-3 rounded-full transition-colors font-bold text-sm ${
                                     isHorror
-                                        ? "bg-red-900 text-black hover:bg-red-700"
+                                        ? "bg-[#5f5438] text-[#f5f1de] hover:bg-[#7a6f4a]"
                                         : "bg-primary text-white hover:bg-primary-2"
                                 }`}
                                 onClick={onYes}
@@ -827,14 +848,9 @@
         };
 
         const AdSpace = ({ className = "" }) => (
-            <div className={`w-full max-w-container mx-auto px-6 my-16 animate-fade-up ${className}`}>
-                <div className="bg-gray-100 border border-gray-200 w-full min-h-[200px] md:min-h-[250px] flex flex-col items-center justify-center text-muted relative overflow-hidden">
-                    <div className="absolute top-2 right-2 text-[10px] border border-muted px-1">広告</div>
-                    <div className="text-center">
-                        <p className="font-bold text-gray-400 text-lg">広告掲載予定エリア</p>
-                        <p className="text-xs mt-2 text-gray-400">Google Adsense / Display Ads</p>
-                    </div>
-                    <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+            <div className={`w-full max-w-container mx-auto px-6 my-16 ${className}`}>
+                <div className="bg-surface-2 border border-border rounded-xl w-full min-h-[90px] md:min-h-[250px] flex items-center justify-center">
+                    <span className="text-[10px] text-muted/40 tracking-widest font-eng select-none">AD</span>
                 </div>
             </div>
         );
@@ -944,6 +960,12 @@
                                 <span onClick={() => setPage('access')} className="cursor-pointer hover:opacity-70">アクセス</span>
                                 <span onClick={() => setPage('recruit')} className="cursor-pointer hover:opacity-70">採用情報</span>
                             </div>
+                            <div className="flex flex-col gap-3 col-span-2 mt-4 pt-4 border-t border-white/20">
+                                <span onClick={() => setPage('privacy_policy')} className="cursor-pointer hover:opacity-70">プライバシーポリシー</span>
+                                <span onClick={() => setPage('terms_of_service')} className="cursor-pointer hover:opacity-70">利用規約</span>
+                                <span onClick={() => setPage('contact_info')} className="cursor-pointer hover:opacity-70">お問い合わせ</span>
+                                <span onClick={() => setPage('ad_disclosure')} className="cursor-pointer hover:opacity-70">広告配信に関する表記（Cookie/第三者配信）</span>
+                            </div>
                         </div>
                         <div className="md:col-span-1">
                             <Button variant="secondary" className="w-full border-white text-white hover:bg-white hover:text-primary mb-6" onClick={() => setPage('contact')}>
@@ -967,12 +989,16 @@
                                         onChange={() => setSettings(prev => ({ ...prev, muteAudio: !prev.muteAudio }))}
                                         className="accent-white"
                                     />
-                                    <span>音声をミュート（準備中）</span>
+                                    <span>音声をミュート</span>
                                 </label>
                             </div>
-                            <div className="flex gap-4 justify-center md:justify-start opacity-80">
-                                <span>Instagram</span>
-                                <span>Facebook</span>
+                            <div className="flex gap-4 justify-center md:justify-start mt-4">
+                                <a href="#" className="w-9 h-9 rounded-full border border-white/30 flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity" aria-label="Instagram">
+                                    <i data-lucide="instagram" className="w-4 h-4"></i>
+                                </a>
+                                <a href="#" className="w-9 h-9 rounded-full border border-white/30 flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity" aria-label="Facebook">
+                                    <i data-lucide="facebook" className="w-4 h-4"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -1189,7 +1215,7 @@ const openRosterFromOddApple = (e) => {
     <div>
       <div className="flex justify-between items-end mb-8 border-b border-border pb-4">
         <h3 className="text-2xl font-serif">News</h3>
-        <span className="text-sm font-eng text-muted cursor-pointer hover:text-primary">View All</span>
+        <span className="text-sm font-eng text-muted cursor-pointer hover:text-primary" onClick={() => setPage('diary')}>View All</span>
       </div>
       <ul className="space-y-6">
         {/* Phase2以降で表示（F03探索可能） */}
@@ -1434,10 +1460,10 @@ const openRosterFromOddApple = (e) => {
                                             className="px-10 py-4 rounded-full bg-gray-200 text-gray-500 font-bold tracking-widest cursor-not-allowed"
                                             disabled
                                         >
-                                            通報（Phase3で解放）
+                                            通報する
                                         </button>
-                                        <p className="text-xs text-muted mt-3">
-                                            Phase3に到達すると通報が可能になります。
+                                        <p className="text-xs text-muted mt-3 font-serif">
+                                            …まだ証拠が足りない。もっと調べる必要がある。
                                         </p>
                                     </div>
                                 )}
@@ -1463,17 +1489,17 @@ const openRosterFromOddApple = (e) => {
         const Village = ({ phase, notifyEvidence, flags }) => {
             const [lightboxOpen, setLightboxOpen] = useState(false);
 
-            // Phase2: キャプチャホバー異変（F14）解放
-            const isCaptureHoverEnabled = phase >= 2;
-            // Phase3: 御神木ホラー（F10）解放
-            const isHorrorPhase = phase >= 3;
+            // Phase3: キャプチャホバー異変（F14）解放
+            const isCaptureHoverEnabled = phase >= 3;
+            // Phase4: 御神木ホラー（F10）解放
+            const isHorrorPhase = phase >= 4;
 
             return (
                 <div className="min-h-screen pt-24 pb-20">
                     <div className="max-w-container mx-auto px-6">
                         <SectionTitle title="奥神伏村について" sub="OUR VILLAGE" />
 
-                        {/* キャプチャ：Phase1は通常固定 / Phase2以降でホバー異変 + F14 */}
+                        {/* キャプチャ：Phase1-2は通常固定 / Phase3以降でホバー異変 + F14 */}
                         {!isCaptureHoverEnabled && (
                             <div className="mb-20">
                                 <div className="relative w-full h-[60vh] rounded-2xl shadow-sm mb-8 overflow-hidden">
@@ -1562,7 +1588,7 @@ const openRosterFromOddApple = (e) => {
 
                         <AdSpace className="mb-24" />
 
-                        {/* F10: Symbol Tree（Phase3以降でホラー化） */}
+                        {/* F10: Symbol Tree（Phase4以降でホラー化） */}
                         <div className="bg-surface-2 rounded-2xl p-8 md:p-16 flex flex-col md:flex-row gap-12 items-center">
                             <div className="md:w-1/2">
                                 <h3 className="text-2xl font-serif mb-4">御神木</h3>
@@ -1607,7 +1633,7 @@ const openRosterFromOddApple = (e) => {
 
                     {/* Lightbox Modal */}
                     {lightboxOpen && (
-                        <div className="fixed inset-0 z-[100] lightbox-overlay flex items-center justify-center p-4" onClick={() => setLightboxOpen(false)}>
+                        <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setLightboxOpen(false)}>
                             <div className="relative max-w-4xl w-full max-h-screen flex flex-col items-center" onClick={(e) => e.stopPropagation()}>
                                 <img 
                                     src={isHorrorPhase ? IMAGES.tree_change : IMAGES.tree_default} 
@@ -1629,7 +1655,7 @@ const openRosterFromOddApple = (e) => {
                                         </button>
                                     </div>
                                 ) : (
-                                    <button className="absolute -top-10 right-0 text-white font-bold" onClick={() => setLightboxOpen(false)}>
+                                    <button className="absolute top-3 right-3 bg-black/50 hover:bg-black/70 text-white px-4 py-2 rounded text-sm transition-colors" onClick={() => setLightboxOpen(false)}>
                                         閉じる
                                     </button>
                                 )}
@@ -2955,14 +2981,14 @@ body: `たくさんの種類を家族で楽しめました。
             { id: 'work_here', label: '奥神伏村で働きたい！', horror: 'クルナ…！！！！！！' },
           ];
         
-          const heroImage = (phase >= 2) ? IMAGES.recruiting_change : IMAGES.recruiting;
+          const heroImage = (phase >= 3) ? IMAGES.recruiting_change : IMAGES.recruiting;
         
           const handleCheck = (item) => {
             const isChecked = !checks[item.id];
             setChecks(prev => ({ ...prev, [item.id]: isChecked }));
         
-            // Phase2以降でのみホラー演出（F05）
-            if (phase >= 2 && isChecked && item.horror) {
+            // Phase3以降でのみホラー演出（F05）
+            if (phase >= 3 && isChecked && item.horror) {
               setHorrorStates(prev => ({ ...prev, [item.id]: true }));
               setGlobalHorror(true);
         
@@ -2979,8 +3005,8 @@ body: `たくさんの種類を家族で楽しめました。
         
           return (
             <div className="min-h-screen pt-24 pb-20 bg-surface-2 relative">
-              {/* ホラーオーバーレイ（Phase2以降の演出時のみ） */}
-              {phase >= 2 && globalHorror && (
+              {/* ホラーオーバーレイ（Phase3以降の演出時のみ） */}
+              {phase >= 3 && globalHorror && (
                 <>
                   <div className="horror-overlay"></div>
                   <div className="horror-vignette"></div>
@@ -3085,11 +3111,9 @@ body: `たくさんの種類を家族で楽しめました。
             const [seenCount, setSeenCount] = useState({ name: false, email: false, address: false, message: false });
             const [modalState, setModalState] = useState({ isOpen: false, message: "", isHorror: false, goAdmin: false });
 
-            // Phase1の段階でもフォームは存在するが、乗っ取り演出は「Phase1内のF12探索」として運用
-            // ＝この実装では Phase1でも演出が起きる（ただし、ユーザーがフィールドに触れない限り起きない）
+            // フォーム乗っ取り演出（F12）はPhase2以降でのみ発動
             const triggerHorror = (field) => {
-                // 最低Phase1から発動（仕様どおり）
-                if (phase < 1) return;
+                if (phase < 2) return;
 
                 setPlaceholders(prev => ({ ...prev, [field]: horrorPlaceholders[field] }));
                 setSeenCount(prev => ({ ...prev, [field]: true }));
@@ -3114,7 +3138,7 @@ body: `たくさんの種類を家族で楽しめました。
                 // 通報は管理人ページ（admin_notice）で行う
                 setModalState({
                   isOpen: true,
-                  message: "【F12: 問い合わせの乗っ取り】\nフォームが完全に乗っ取られている。\n\n証拠に気づいたか？\n最後は『管理人からのお知らせ（関係者各位）』にある。",
+                  message: "フォームが完全に乗っ取られている。\n\n証拠に気づいたか？\n最後は『管理人からのお知らせ（関係者各位）』にある。",
                   isHorror: true,
                   goAdmin: true
                 });
@@ -3201,9 +3225,9 @@ body: `たくさんの種類を家族で楽しめました。
                                 
                                 <h4 className="font-bold font-serif mb-4">よくあるご質問</h4>
                                 <ul className="text-sm text-muted space-y-3">
-                                    <li className="hover:text-primary cursor-pointer">・ 予約のキャンセルについて</li>
-                                    <li className="hover:text-primary cursor-pointer">・ ギフトラッピングについて</li>
-                                    <li className="hover:text-primary cursor-pointer">・ アレルギー対応について</li>
+                                    <li>・ 予約のキャンセルについて</li>
+                                    <li>・ ギフトラッピングについて</li>
+                                    <li>・ アレルギー対応について</li>
                                 </ul>
                             </div>
                         </div>
@@ -3223,6 +3247,200 @@ body: `たくさんの種類を家族で楽しめました。
             );
         };
 
+
+
+        const LegalPage = ({ title, subtitle, content }) => {
+            return (
+                <div className="min-h-screen pt-24 pb-20">
+                    <div className="max-w-4xl mx-auto px-6">
+                        <SectionTitle title={title} sub={subtitle} />
+                        <div className="bg-white border border-border rounded-2xl p-6 md:p-10 shadow-sm">
+                            <pre className="whitespace-pre-wrap font-sans text-sm md:text-base leading-loose text-text">{content}</pre>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const privacyPolicyText = `奥神伏ファーム プライバシーポリシー
+制定日：2026年2月9日
+最終改定日：2026年2月9日
+
+プロトプレイ（以下「運営者」）は、運営者が提供するウェブサイト「奥神伏ファーム」（以下「当サイト」）において取得するユーザー情報等の取扱いについて、以下のとおりプライバシーポリシー（以下「本ポリシー」）を定めます。
+
+1. 事業者情報
+・運営者名：プロトプレイ
+・連絡先（メール）：protoplaystudio@gmail.com
+・所在地：所在地については、請求があれば遅滞なく開示いたします。
+
+2. 取得する情報と取得方法
+当サイトでは、以下の情報を取得する場合があります。
+
+(1) お問い合わせ時にユーザーが入力・送信する情報
+・お名前
+・メールアドレス
+・住所（任意）
+・お問い合わせ内容
+・その他フォームに入力された情報
+
+(2) 当サイトの閲覧に伴い自動的に取得される情報
+・IPアドレス
+・閲覧日時、閲覧ページ、参照元URL
+・端末情報（ブラウザ種別、OS、画面サイズ等）
+・Cookie（クッキー）等の識別子
+・広告配信や計測に必要となる情報（後記「広告配信について」参照）
+
+3. 利用目的
+当サイトは、取得した情報を以下の目的で利用します。
+・お問い合わせへの対応、連絡、本人確認のため
+・当サイトの運営、維持、改善、品質向上のため
+・不正利用の防止、セキュリティ確保のため
+・広告配信および広告効果測定のため
+・上記目的に付随する目的のため
+
+4. 個人情報の管理
+当サイトは、取得した情報の漏えい、滅失、毀損等を防止するため、適切な安全管理措置を講じます。
+
+5. 第三者提供
+当サイトは、次の場合を除き、取得した個人情報を第三者に提供しません。
+・本人の同意がある場合
+・法令に基づく場合
+・人の生命、身体または財産の保護のために必要であり、本人の同意を得ることが困難な場合
+・業務委託に伴い、利用目的の達成に必要な範囲で委託先に提供する場合（次項）
+
+6. 業務委託
+当サイトは、利用目的の達成に必要な範囲で、個人情報の取扱いを外部事業者へ委託することがあります。この場合、委託先の選定を適切に行い、必要かつ適切な監督を実施します。
+
+7. Cookie等の利用
+当サイトは、利便性向上、広告配信、広告効果測定等の目的でCookie等を使用する場合があります。
+ユーザーは、ブラウザの設定によりCookieの無効化または削除が可能です。ただし、Cookieを無効化した場合、当サイトの一部機能が正しく動作しない場合があります。
+
+8. 広告配信について（Google AdSense）
+当サイトは、第三者配信の広告サービス（Google AdSense等）を利用する場合があります。
+
+(1) Cookieの使用
+Googleなどの第三者配信事業者は、ユーザーの興味に応じた広告を表示するためにCookie等を使用することがあります。
+これにより、当サイトや他サイトへのアクセス情報に基づいた広告が表示される場合があります。
+
+(2) パーソナライズド広告の無効化（オプトアウト）
+ユーザーは、広告設定等によりパーソナライズド広告を無効化できます。
+また、第三者配信事業者によるCookieの使用を無効化できる場合があります（対応状況は各事業者・ブラウザにより異なります）。
+
+※オプトアウト方法の参照先は、本ポリシー末尾の「参考リンク」をご確認ください。
+
+9. 開示・訂正・削除等の請求
+ユーザーご本人から、当サイトが保有する個人情報について、開示・訂正・削除・利用停止等の請求があった場合、本人確認の上、法令に従い合理的な範囲で対応します。
+
+10. 本ポリシーの変更
+当サイトは、法令変更や運用変更等に応じて本ポリシーを改定することがあります。改定後の内容は当サイト上で公表した時点から適用されます。
+
+11. お問い合わせ窓口
+本ポリシーに関するお問い合わせは、下記までご連絡ください。
+・メール：protoplaystudio@gmail.com
+
+参考リンク（ユーザー向け）
+・Google 広告設定（パーソナライズド広告の管理）
+・AboutAds（第三者広告のオプトアウト）
+・Googleの広告に関するポリシー（技術情報）
+※URLは当サイトの「広告配信に関する表記」ページに掲載します。`;
+
+        const termsOfServiceText = `奥神伏ファーム 利用規約
+制定日：2026年2月9日
+最終改定日：2026年2月9日
+
+この利用規約（以下「本規約」）は、プロトプレイ（以下「運営者」）が提供するウェブサイト「奥神伏ファーム」（以下「当サイト」）の利用条件を定めるものです。ユーザーは当サイトを利用することで、本規約に同意したものとみなします。
+
+1. 適用
+本規約は、当サイトの利用に関する一切に適用されます。
+
+2. 禁止事項
+ユーザーは、当サイトの利用にあたり、以下の行為をしてはなりません。
+・法令または公序良俗に反する行為
+・犯罪行為またはこれを助長する行為
+・運営者、他のユーザー、第三者の権利（著作権、商標権、プライバシー等）を侵害する行為
+・当サイトの運営を妨害する行為（過度なアクセス、脆弱性探索、リバースエンジニアリング等を含む）
+・虚偽の情報を送信する行為
+・その他、運営者が不適切と判断する行為
+
+3. 免責事項
+(1) 掲載内容について
+運営者は、当サイトに掲載する情報の正確性、完全性、有用性、安全性等の確保に努めますが、これらを保証するものではありません。
+
+(2) 損害について
+当サイトの利用または利用不能によりユーザーに生じた損害について、運営者は一切の責任を負いません。ただし、法令により免責が認められない場合を除きます。
+
+(3) 外部サービス・外部リンク
+当サイトから外部サイトや外部サービスへリンクしている場合でも、外部サイト等の内容や取扱いについて運営者は責任を負いません。
+
+4. サービス内容の変更・停止
+運営者は、ユーザーへの事前通知なく、当サイトの内容変更、提供の中断または停止を行うことがあります。
+
+5. 知的財産権
+当サイトに掲載される文章、画像、デザイン、プログラム等に関する著作権その他の知的財産権は、運営者または正当な権利者に帰属します。
+ユーザーは、私的利用の範囲を超えて、無断で転載、複製、改変、再配布等を行ってはなりません。
+
+6. 規約の変更
+運営者は、必要に応じて本規約を改定できるものとし、改定後の本規約は当サイト上で公表した時点から効力を生じます。
+
+7. 準拠法・管轄
+本規約の準拠法は日本法とします。
+当サイトに関連して運営者とユーザー間で紛争が生じた場合、大阪地方裁判所を第一審の専属的合意管轄裁判所とします。
+
+8. お問い合わせ
+本規約に関するお問い合わせは、下記までご連絡ください。
+・メール：protoplaystudio@gmail.com`;
+
+        const contactInfoText = `お問い合わせ
+
+当サイト（奥神伏ファーム）へのご連絡は、以下よりお願いいたします。
+内容により返信までお時間をいただく場合があります。
+
+1. お問い合わせフォーム
+当サイト内の「お問い合わせ」フォームよりご送信ください。
+※返信先としてメールアドレスの入力が必要です。
+
+2. メールでのお問い合わせ
+protoplaystudio@gmail.com
+
+3. ご案内
+・返信の目安：原則として数営業日以内を目途にご返信します。
+・お問い合わせ内容によっては、回答できない場合があります。
+
+4. 個人情報の取扱い
+お問い合わせに際して取得した情報は、回答・連絡の目的で利用し、当サイトのプライバシーポリシーに従い適切に取り扱います。`;
+
+        const adDisclosureText = `広告配信に関する表記（Cookie／第三者配信）
+制定日：2026年2月9日
+最終改定日：2026年2月9日
+
+当サイト（奥神伏ファーム）では、広告配信および広告効果測定のためにCookie等を使用する場合があります。本ページでは広告配信に関する情報を示します。
+
+1. 第三者配信の広告サービスについて
+当サイトは、第三者配信の広告サービス（Google AdSense等）を利用する場合があります。
+第三者配信事業者は、ユーザーの興味に応じた広告を表示するためにCookie等を使用することがあります。
+
+2. Cookieとは
+Cookieは、ウェブサイト閲覧時にブラウザに保存される小さなデータです。
+Cookieによりブラウザを識別できる場合がありますが、Cookie単体で氏名や住所など個人を直接特定する情報を含むものではありません。
+
+3. パーソナライズド広告の無効化（オプトアウト）
+ユーザーは、以下の方法により、パーソナライズド広告を無効化できます。
+・Googleの広告設定でパーソナライズド広告をオフにする
+・AboutAds等で第三者配信事業者によるCookieの利用を無効化する（対応している場合）
+
+4. ブラウザ設定によるCookieの無効化
+ユーザーは、ブラウザの設定によりCookieを削除・無効化できます。
+ただし、無効化した場合、当サイトの一部機能が正しく動作しない場合があります。
+
+5. お問い合わせ
+広告配信に関する表記についてのお問い合わせは下記までお願いします。
+・メール：protoplaystudio@gmail.com
+
+参考リンク（URL）
+・Google 広告設定：https://adssettings.google.com/
+・AboutAds（オプトアウト）：https://www.aboutads.info/
+・Googleの広告に関するポリシー（技術情報）：https://policies.google.com/technologies/ads?hl=ja`;
+
         const EndingPage = ({ endingResult, flags, onRestart, onShare, onKeepProgress }) => {
             useEffect(() => {
                 window.scrollTo(0, 0);
@@ -3240,52 +3458,69 @@ body: `たくさんの種類を家族で楽しめました。
                 );
             }
 
+            const ENDING_THEMES = {
+                SILENCED: 'bg-black text-gray-400',
+                NORMAL: 'bg-[#1a1a2e] text-gray-300',
+                TRUE: 'bg-gradient-to-b from-[#0f2027] to-[#203a43] text-gray-200',
+                PERFECT: 'bg-gradient-to-b from-[#0f0f0f] to-[#1a0000] text-gray-100',
+            };
+            const ENDING_SCORE_THEMES = {
+                SILENCED: 'bg-white/5 border-white/10',
+                NORMAL: 'bg-white/5 border-white/10',
+                TRUE: 'bg-white/5 border-white/15',
+                PERFECT: 'bg-white/5 border-red-900/30',
+            };
+
+            const themeClass = ENDING_THEMES[endingResult.endingId] || 'bg-surface';
+            const scoreThemeClass = ENDING_SCORE_THEMES[endingResult.endingId] || 'bg-surface-2 border-border';
+
             return (
-                <div className="min-h-screen pt-24 pb-20 bg-surface">
-                    <div className="max-w-4xl mx-auto px-6">
-                        <div className="text-center mb-10">
-                            <p className="text-accent font-eng tracking-[0.4em] text-xs mb-3">ENDING</p>
-                            <h1 className="text-4xl md:text-5xl font-serif font-bold mb-3">{endingResult.title}</h1>
-                            <p className="text-muted text-sm md:text-base">{endingResult.subtitle}</p>
+                <div className={`min-h-screen pb-20 ${themeClass}`}>
+                    {/* Hero with overlay */}
+                    <div className="relative w-full h-[420px] md:h-[520px] overflow-hidden">
+                        <img src={endingResult.image} alt={endingResult.title} className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                        <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 text-center">
+                            <p className="text-red-400/80 font-eng tracking-[0.4em] text-xs mb-3 uppercase">Ending</p>
+                            <h1 className="text-4xl md:text-5xl font-serif font-bold mb-3 text-white drop-shadow-lg">{endingResult.title}</h1>
+                            <p className="text-white/70 text-sm md:text-base">{endingResult.subtitle}</p>
                         </div>
+                    </div>
 
-                        <div className="rounded-2xl overflow-hidden shadow-xl mb-10">
-                            <img src={endingResult.image} alt={endingResult.title} className="w-full h-[320px] md:h-[420px] object-cover" />
-                        </div>
-
+                    <div className="max-w-4xl mx-auto px-6 pt-12">
                         <div className="space-y-6 text-sm md:text-base leading-loose font-serif mb-10">
                             {endingResult.story.map((paragraph, index) => (
-                                <p key={index}>{paragraph}</p>
+                                <p key={index} className="ending-fade-in" style={{ animationDelay: `${index * 0.3}s` }}>{paragraph}</p>
                             ))}
                         </div>
 
-                        <div className="bg-surface-2 border border-border rounded-2xl p-6 md:p-8 mb-10">
+                        <div className={`rounded-2xl p-6 md:p-8 mb-10 border ${scoreThemeClass}`}>
                             <h2 className="text-lg font-serif font-bold mb-4">スコア</h2>
                             <div className="grid md:grid-cols-2 gap-4 text-sm">
-                                <div className="flex items-center justify-between border-b border-border pb-2">
-                                    <span className="text-muted">証拠数</span>
+                                <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                                    <span className="opacity-70">証拠数</span>
                                     <span className="font-bold">{endingResult.evidenceCount}/{EVIDENCE_FLAGS.length}</span>
                                 </div>
-                                <div className="flex items-center justify-between border-b border-border pb-2">
-                                    <span className="text-muted">重要証拠</span>
+                                <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                                    <span className="opacity-70">重要証拠</span>
                                     <span className="font-bold">{endingResult.keyCount}/{KEY_EVIDENCE_FLAGS.length}</span>
                                 </div>
                             </div>
                         </div>
 
                         <div className="mb-12">
-                            <h2 className="text-lg font-serif font-bold mb-4">達成フラグ一覧</h2>
+                            <h2 className="text-lg font-serif font-bold mb-4">証拠一覧</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                {FLAG_META_ORDER.map((id) => {
+                                {FLAG_META_ORDER.map((id, idx) => {
                                     const isFound = !!flags[id];
                                     return (
                                         <div
                                             key={id}
                                             className={`px-4 py-3 rounded-lg border text-sm ${
-                                                isFound ? 'bg-white border-border text-text' : 'bg-surface-2 border-dashed border-border text-muted'
+                                                isFound ? 'bg-white/10 border-white/15' : 'bg-white/5 border-dashed border-white/10 opacity-50'
                                             }`}
                                         >
-                                            {isFound ? `${id}: ${FLAG_META[id]?.title ?? ''}` : `${id}: ???`}
+                                            {isFound ? `${idx + 1}. ${FLAG_META[id]?.title ?? ''}` : `${idx + 1}. 未発見の証拠`}
                                         </div>
                                     );
                                 })}
@@ -3298,13 +3533,13 @@ body: `たくさんの種類を家族で楽しめました。
                             </Button>
                             <Button
                                 variant="secondary"
-                                className="px-8"
+                                className="px-8 border-white/30 text-white/80 hover:bg-white/10 hover:text-white"
                                 onClick={() => onShare(endingResult.share)}
                             >
                                 Xでシェア
                             </Button>
                             <button
-                                className="text-sm text-muted hover:text-primary transition-colors"
+                                className="text-sm opacity-60 hover:opacity-100 transition-opacity"
                                 onClick={onKeepProgress}
                             >
                                 証拠を保持してHOMEへ
@@ -3329,6 +3564,18 @@ body: `たくさんの種類を家族で楽しめました。
             const [isLoaded, setIsLoaded] = useState(false);
             const [selectedStaff, setSelectedStaff] = useState(null);
             const [selectedArticle, setSelectedArticle] = useState(null);
+            const [showDebug, setShowDebug] = useState(false);
+
+            useEffect(() => {
+                const handleDebugKey = (e) => {
+                    if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+                        e.preventDefault();
+                        setShowDebug(prev => !prev);
+                    }
+                };
+                window.addEventListener('keydown', handleDebugKey);
+                return () => window.removeEventListener('keydown', handleDebugKey);
+            }, []);
 
             useEffect(() => {
                 window.scrollTo(0, 0);
@@ -3417,7 +3664,7 @@ body: `たくさんの種類を家族で楽しめました。
                 // Phase3以降はホラーUI
                 const isHorror = phase >= 3;
 
-                const messageLines = [`【${flagId}: ${meta.title}】`];
+                const messageLines = [`【${meta.title}】`];
                 if (detailText) messageLines.push(detailText);
                 const message = messageLines.join("\n");
 
@@ -3454,6 +3701,12 @@ body: `たくさんの種類を家族で楽しめました。
                 setPage('home');
             };
 
+            const resetFlagsForDebug = () => {
+                setFlags({});
+                setEndingResult(null);
+                setPage('home');
+            };
+
             const handleReport = () => {
                 const ending = computeEnding(flags, phase);
                 setEndingResult(ending);
@@ -3478,6 +3731,10 @@ body: `たくさんの種類を家族で楽しめました。
                     case 'admin_notice': return <AdminNotice {...props} onReport={handleReport} />;
                     case 'recruit': return <Recruit {...props} />;
                     case 'contact': return <Contact {...props} />;
+                    case 'privacy_policy': return <LegalPage title="プライバシーポリシー" subtitle="PRIVACY POLICY" content={privacyPolicyText} />;
+                    case 'terms_of_service': return <LegalPage title="利用規約" subtitle="TERMS OF SERVICE" content={termsOfServiceText} />;
+                    case 'contact_info': return <LegalPage title="お問い合わせ" subtitle="CONTACT" content={contactInfoText} />;
+                    case 'ad_disclosure': return <LegalPage title="広告配信に関する表記（Cookie/第三者配信）" subtitle="AD DISCLOSURE" content={adDisclosureText} />;
                     case 'ending':
                         return (
                             <EndingPage
@@ -3506,11 +3763,14 @@ body: `たくさんの種類を家族で楽しめました。
                     <div className="min-h-screen flex flex-col font-sans text-text">
                         <Header setPage={setPage} currentPage={currentPage} phase={phase} />
                         <main className="flex-grow">
-                            {renderPage()}
+                            <div className="page-fade-in" key={currentPage}>
+                                {renderPage()}
+                            </div>
                         </main>
                         <Footer phase={phase} setPage={setPage} settings={settings} setSettings={setSettings} />
 
-                        {/* Debug UI：右下表示（要求仕様） */}
+                        {/* Debug UI：Ctrl+Shift+D で表示切替 */}
+                        {showDebug && (
                         <div className="fixed bottom-2 right-2 z-[200] text-[10px] bg-black/80 text-white px-3 py-2 rounded-lg shadow-lg">
                             <div className="font-eng tracking-wider">Phase: <span className="font-bold">{phase}</span></div>
                             <div className="mt-1 opacity-90">
@@ -3519,7 +3779,15 @@ body: `たくさんの種類を家族で楽しめました。
                             <div className="mt-1 opacity-70">
                                 Total Flags: {Object.keys(flags).length}/{MAX_FLAGS}
                             </div>
+                            <button
+                                type="button"
+                                className="mt-2 w-full text-left text-[10px] px-2 py-1 rounded bg-white/15 hover:bg-white/25 transition-colors"
+                                onClick={resetFlagsForDebug}
+                            >
+                                フラグをリセット（デバッグ）
+                            </button>
                         </div>
+                        )}
                     </div>
                     <MessageModal
                         isOpen={evidenceModal.isOpen}
