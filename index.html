@@ -7,6 +7,8 @@
     <meta name="description" content="長野県奥神伏村の有機農園。農薬不使用のりんご・ぶどう・自家製ジャムをお届けします。土と生きる、循環する未来。">
     <meta name="keywords" content="奥神伏ファーム, 有機農園, 長野県, りんご, ぶどう, 無農薬, オーガニック">
     <meta name="author" content="奥神伏ファーム">
+    <meta name="robots" content="index,follow,max-snippet:0,noarchive">
+    <meta name="googlebot" content="index,follow,max-snippet:0,noarchive">
     <link rel="canonical" href="https://okukamifushifarm.pages.dev/">
 
     <!-- Open Graph / SNS共有 -->
@@ -255,12 +257,6 @@
             }
         }
 
-        [data-reduce-motion="true"] .horror-overlay::before,
-        [data-reduce-motion="true"] .intense-glitch,
-        [data-reduce-motion="true"] .image-glitching {
-            animation: none !important;
-        }
-        
         .image-glitching {
             animation: image-glitch 0.2s infinite;
             filter: contrast(1.2) brightness(0.8) sepia(0.5) hue-rotate(-50deg) !important;
@@ -440,11 +436,11 @@
             // Grafting
             grafting: "https://raw.githubusercontent.com/dh0320/okukamimurafarm/52ef76040ef84ddb52fdf5827a52315f4c4d9ec7/images/tsugiki.png",
 
-            // Ending (temporary reuse)
-            ending_silenced: `${BASE_URL}/images/staffvictim2.png`,
-            ending_normal: `${BASE_URL}/images/villagenight.png`,
-            ending_true: `${BASE_URL}/images/treechange.png`,
-            ending_perfect: "https://raw.githubusercontent.com/dh0320/okukamimurafarm/cce9c3db56a9593996fa1381a826289236d747a2/images/staffmanagerchange.png",
+            // Ending
+            ending_normal: "https://raw.githubusercontent.com/dh0320/okukamimurafarm/main/images/normalend.png",
+            ending_silenced: "https://raw.githubusercontent.com/dh0320/okukamimurafarm/main/images/silencedend.png",
+            ending_perfect: "https://raw.githubusercontent.com/dh0320/okukamimurafarm/main/images/perfectend.png",
+            ending_true: "https://raw.githubusercontent.com/dh0320/okukamimurafarm/main/images/trueend.png",
             
             // topkodawari
             kodawari_soil: "https://raw.githubusercontent.com/dh0320/okukamimurafarm/main/images/kodawarisoil.png",
@@ -545,19 +541,19 @@
 
         const FLAG_META = {
             F01: { title: "副園長の隠しメッセージ", description: "反転でSOS" },
-            F02: { title: "タグが出現する訴えの動画", description: "商品タグから動画" },
-            F03: { title: "管理人からのお知らせ（関係者各位）", description: "関係者ページ発見" },
+            F02: { title: "悲痛な訴え動画", description: "商品タグから動画" },
+            F03: { title: "管理人からのお知らせ", description: "関係者ページ発見" },
             F04: { title: "アップルパイの秘密", description: "レシピ奥の隠し導線" },
-            F05: { title: "募集要項の変化", description: "チェックが「選別」に" },
+            F05: { title: "変化する募集要項", description: "チェックが「選別」に" },
             F06: { title: "隠された実習生", description: "失踪記録の痕跡" },
-            F07: { title: "古いブログ", description: "1826年データ" },
-            F08: { title: "STOP映像", description: "トップスライドの罠" },
+            F07: { title: "古い記録のブログ", description: "1826年データ" },
+            F08: { title: "村からは出られない", description: "トップスライドの罠" },
             F09: { title: "園長の異変", description: "自動グリッチ" },
             F10: { title: "シンボルツリーの秘密", description: "御神木の根元" },
-            F11: { title: "謎の地図", description: "アクセスの異常" },
-            F12: { title: "問い合わせの乗っ取り", description: "フォームが侵食" },
-            F13: { title: "通報", description: "通報実行フラグ" },
-            F14: { title: "村のキャプチャの異変", description: "ホバー/タップ異変" },
+            F11: { title: "異常な監視", description: "アクセスの異常" },
+            F12: { title: "問い合わせ乗っ取り", description: "フォームが侵食" },
+            F13: { title: "覚悟の通報", description: "通報実行フラグ" },
+            F14: { title: "村ぐるみの儀式", description: "ホバー/タップ異変" },
             F15: { title: "縦読みレビュー", description: "たすけて / 1826のヒント" },
             F16: { title: "社員名簿の欠落", description: "色違いのりんごから名簿" }
         };
@@ -573,21 +569,29 @@
         const ENDING_CONTENT = {
             SILENCED: {
                 title: "SILENCED END",
-                subtitle: "通報は届かなかった。声は闇に沈む。",
+                subtitle: "通報は届かなかった。声は闇に消えた。",
                 story: [
-                    "通報を押した瞬間、画面は静かに暗転した。",
-                    "数日後、農園は通常営業を続けている。彼らの名はどこにも残らず、証拠も記録も消えていた。",
-                    "村を出ようとした足跡は、深い土の中に吸い込まれていった。"
+                    "あなたは確かに通報を行った。証拠も、記録も、警告も送ったはずだった。",
+                    "だが、何も変わらなかった。数日後の奥神伏ファームは、何事もなかったかのように通常営業を再開している。",
+                    "園長とその妻の姿だけは変わらない。それ以外のスタッフは、まるで名簿ごと塗り替えられたように入れ替わっていた。",
+                    "農園の掲示や案内文も、妙に整いすぎている。違和感だけを残して、肝心な痕跡はどこにもない。",
+                    "問い合わせても返事は来ない。来たとしても、定型文のように冷たく、こちらの言葉が届いていない感覚だけが残る。",
+                    "夜になると、ページの片隅に一瞬だけ“赤い点”が灯り、次の瞬間には何もなかったことになる。",
+                    "あなたが通報を終えてブラウザを閉じた夜、あの泥道に続いていたはずの“足跡”の痕跡は、翌朝には跡形もなく消えていた。"
                 ],
                 image: IMAGES.ending_silenced
             },
             NORMAL: {
                 title: "NORMAL END",
-                subtitle: "警察は動いた。だが核心は逃げた。",
+                subtitle: "警察は動いた。だが園長たちは消えてしまった。",
                 story: [
-                    "通報は受理され、現地への捜査が始まった。",
-                    "いくつかの痕跡は押収されたが、主導した人物は姿を消していた。",
-                    "報告書の多くは黒塗りのまま公開され、事件は未解決として継続する。"
+                    "通報は正式に受理され、警察は奥神伏ファームへの捜査を開始した。",
+                    "農園は一時封鎖され、倉庫や作業場からはいくつかの証拠品が押収された。",
+                    "だが、捜査の中心にいたはずの園長夫妻と数名の関係者は、捜索が始まる前に姿を消していた。",
+                    "公開された報告書の多くは黒塗りのまま残され、事件は“未解決のまま継続”として処理される。",
+                    "救出された副園長の佐藤と実習生たちは保護されたが、物音ひとつに肩を震わせ、誰かの視線を恐れる日々が続く。",
+                    "彼らは口を開こうとすると、言葉の手前で止まる。まるで“話してはいけない”合図がまだ残っているかのように。",
+                    "そして今日も、どこかで真っ赤なリンゴは生産され続け、市場に紛れ、何事もなかったように誰かの食卓へ届いている。"
                 ],
                 image: IMAGES.ending_normal
             },
@@ -595,19 +599,27 @@
                 title: "TRUE END",
                 subtitle: "真相が暴かれた。救出は間に合った。",
                 story: [
-                    "十分な証拠が集まり、警察は一斉捜索を開始した。",
-                    "奥神伏の儀式は中断され、失踪者の所在が判明した。",
-                    "農園の闇は暴かれ、村の空気はようやく動き出した。"
+                    "あなたが集めた証拠は決定打となり、警察は大規模な一斉捜索を開始した。",
+                    "奥神伏ファームで密かに行われていた儀式は中断され、主要な関係者は拘束された。",
+                    "閉ざされた区画から行方不明者たちが発見され、無事に救出された。",
+                    "副園長の佐藤と実習生たちは保護され、長く続いた恐怖から少しずつ呼吸を取り戻していく。",
+                    "震えながらも、彼らは自分の名前を言えるようになる。「ここにいる」と言えるようになる。",
+                    "一方で、村は静まり返ったままだ。誰も多くを語らず、目を合わせることすら避ける者もいる。",
+                    "それでも、少なくとも“あの夜”は止まった。あなたの手で、救いは間に合った。"
                 ],
                 image: IMAGES.ending_true
             },
             PERFECT: {
                 title: "PERFECT END",
-                subtitle: "すべての記録が解放された。",
+                subtitle: "すべての真実が解放された。",
                 story: [
-                    "あらゆる証拠が揃い、隠された記録が公開された。",
-                    "村の歴史、儀式の全貌、そして犠牲の数が白日のもとに晒される。",
-                    "あなたの記録は、生き残った者たちの唯一の希望になった。"
+                    "あなたはすべての証拠を集めきり、隠されていた記録の在処を突き止めた。",
+                    "村の歴史、儀式の全貌、そして積み重ねられてきた犠牲の数が、余白のない形で白日のもとに晒される。",
+                    "事件は個人の犯罪ではなく、村ぐるみで温存されてきた構造として認識され、逃げ道は塞がれた。",
+                    "公表された資料は社会に衝撃を与え、関係者の責任は明確になり、再発の芽を潰すための動きが一気に進む。",
+                    "あなたの得た記録は、生き残った人々の希望となり、“次は起きない”という確かな根拠になった。",
+                    "真っ赤なリンゴはもう、黙って流通しない。誰もがその色の意味を知り、見過ごさない。",
+                    "そしてあなたは、真実を解放した者として静かにページを閉じる。物語は終わった——終わらせた。"
                 ],
                 image: IMAGES.ending_perfect
             }
@@ -1075,7 +1087,7 @@
             );
         };
 
-        const Footer = ({ phase, setPage, settings, setSettings }) => {
+        const Footer = ({ phase, setPage }) => {
             return (
                 <footer className={`pt-20 pb-8 px-6 transition-colors duration-1000 ${phase >= 4 ? 'bg-black text-accent' : 'bg-primary text-white'}`}>
                     <div className="max-w-container mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
@@ -1109,27 +1121,6 @@
                             <Button variant="secondary" className="w-full border-white text-white hover:bg-white hover:text-primary mb-6" onClick={() => setPage('contact')}>
                                 お問い合わせ
                             </Button>
-                            <div className="bg-white/10 rounded-lg p-4 text-xs space-y-3">
-                                <p className="font-eng tracking-widest">SETTINGS</p>
-                                <label className="flex items-center gap-2 cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        checked={settings.reduceMotion}
-                                        onChange={() => setSettings(prev => ({ ...prev, reduceMotion: !prev.reduceMotion }))}
-                                        className="accent-white"
-                                    />
-                                    <span>演出を抑える</span>
-                                </label>
-                                <label className="flex items-center gap-2 cursor-pointer opacity-70">
-                                    <input
-                                        type="checkbox"
-                                        checked={settings.muteAudio}
-                                        onChange={() => setSettings(prev => ({ ...prev, muteAudio: !prev.muteAudio }))}
-                                        className="accent-white"
-                                    />
-                                    <span>音声をミュート</span>
-                                </label>
-                            </div>
                             <div className="flex gap-4 justify-center md:justify-start mt-4">
                                 <a href="#" className="w-9 h-9 rounded-full border border-white/30 flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity" aria-label="Instagram">
                                     <i data-lucide="instagram" className="w-4 h-4"></i>
@@ -1240,8 +1231,10 @@ const openRosterFromOddApple = (e) => {
 
 ・神去 巌（園長）
 ・神去 由利（加工・農園キッチン）
+・神去 守（農園手伝い）
 ・佐藤 健太（副園長・Web/広報）
 ・グエン・マイ・リン（栽培）
+・ホアン・アイン・トゥー（栽培）
 ・ヴー・タイン・アン（栽培）……（更新停止）`
   });
 };
@@ -3599,29 +3592,59 @@ Cookieによりブラウザを識別できる場合がありますが、Cookie�
             const ENDING_THEMES = {
                 SILENCED: 'bg-black text-gray-400',
                 NORMAL: 'bg-[#1a1a2e] text-gray-300',
-                TRUE: 'bg-gradient-to-b from-[#0f2027] to-[#203a43] text-gray-200',
-                PERFECT: 'bg-gradient-to-b from-[#0f0f0f] to-[#1a0000] text-gray-100',
+                TRUE: 'bg-gradient-to-b from-[#f5fbe9] via-[#eef9ff] to-[#e6f7ea] text-[#24321f]',
+                PERFECT: 'bg-gradient-to-b from-[#fff8dc] via-[#fff3e0] to-[#ffe9cf] text-[#3b2f1f]',
             };
             const ENDING_SCORE_THEMES = {
                 SILENCED: 'bg-white/5 border-white/10',
                 NORMAL: 'bg-white/5 border-white/10',
-                TRUE: 'bg-white/5 border-white/15',
-                PERFECT: 'bg-white/5 border-red-900/30',
+                TRUE: 'bg-white/70 border-emerald-200/80 shadow-sm',
+                PERFECT: 'bg-white/75 border-amber-200/90 shadow-sm',
+            };
+            const ENDING_HERO_OVERLAYS = {
+                SILENCED: 'absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent',
+                NORMAL: 'absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent',
+                TRUE: 'absolute inset-0 bg-gradient-to-t from-emerald-950/30 via-sky-900/10 to-emerald-200/5',
+                PERFECT: 'absolute inset-0 bg-gradient-to-t from-amber-950/35 via-orange-900/10 to-amber-100/10',
+            };
+            const ENDING_TEXT_THEMES = {
+                SILENCED: {
+                    label: 'text-red-400/80',
+                    title: 'text-white drop-shadow-lg',
+                    subtitle: 'text-white/70'
+                },
+                NORMAL: {
+                    label: 'text-red-400/80',
+                    title: 'text-white drop-shadow-lg',
+                    subtitle: 'text-white/70'
+                },
+                TRUE: {
+                    label: 'text-emerald-700/90',
+                    title: 'text-emerald-950 drop-shadow-[0_2px_6px_rgba(255,255,255,0.65)]',
+                    subtitle: 'text-emerald-900/85'
+                },
+                PERFECT: {
+                    label: 'text-amber-700/95',
+                    title: 'text-amber-950 drop-shadow-[0_2px_6px_rgba(255,255,255,0.65)]',
+                    subtitle: 'text-amber-900/85'
+                },
             };
 
             const themeClass = ENDING_THEMES[endingResult.endingId] || 'bg-surface';
             const scoreThemeClass = ENDING_SCORE_THEMES[endingResult.endingId] || 'bg-surface-2 border-border';
+            const heroOverlayClass = ENDING_HERO_OVERLAYS[endingResult.endingId] || ENDING_HERO_OVERLAYS.NORMAL;
+            const textTheme = ENDING_TEXT_THEMES[endingResult.endingId] || ENDING_TEXT_THEMES.NORMAL;
 
             return (
                 <div className={`min-h-screen pb-20 ${themeClass}`}>
                     {/* Hero with overlay */}
                     <div className="relative w-full h-[420px] md:h-[520px] overflow-hidden">
                         <img src={endingResult.image} alt={endingResult.title} className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                        <div className={heroOverlayClass}></div>
                         <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 text-center">
-                            <p className="text-red-400/80 font-eng tracking-[0.4em] text-xs mb-3 uppercase">Ending</p>
-                            <h1 className="text-4xl md:text-5xl font-serif font-bold mb-3 text-white drop-shadow-lg">{endingResult.title}</h1>
-                            <p className="text-white/70 text-sm md:text-base">{endingResult.subtitle}</p>
+                            <p className={`${textTheme.label} font-eng tracking-[0.4em] text-xs mb-3 uppercase`}>Ending</p>
+                            <h1 className={`text-4xl md:text-5xl font-serif font-bold mb-3 ${textTheme.title}`}>{endingResult.title}</h1>
+                            <p className={`${textTheme.subtitle} text-sm md:text-base`}>{endingResult.subtitle}</p>
                         </div>
                     </div>
 
@@ -3798,7 +3821,6 @@ Cookieによりブラウザを識別できる場合がありますが、Cookie�
             const [flags, setFlags] = useState({});
             const [endingResult, setEndingResult] = useState(null);
             const [seenEndings, setSeenEndings] = useState({});
-            const [settings, setSettings] = useState({ reduceMotion: false, muteAudio: false });
             const [evidenceModal, setEvidenceModal] = useState({ isOpen: false, message: "", isHorror: false });
             const [evidenceToast, setEvidenceToast] = useState({ isOpen: false, message: "", isHorror: false });
             const toastTimerRef = useRef(null);
@@ -3839,12 +3861,6 @@ Cookieによりブラウザを識別できる場合がありますが、Cookie�
                 if (saved) {
                     setFlags(saved.flags || {});
                     setSeenEndings(saved.seenEndings || {});
-                    setSettings(prev => ({ ...prev, ...(saved.settings || {}) }));
-                } else {
-                    const prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-                    if (prefersReduced) {
-                        setSettings(prev => ({ ...prev, reduceMotion: true }));
-                    }
                 }
                 setIsLoaded(true);
             }, []);
@@ -3869,10 +3885,6 @@ Cookieによりブラウザを識別できる場合がありますが、Cookie�
             }, [phase]);
 
             useEffect(() => {
-                document.body.setAttribute('data-reduce-motion', settings.reduceMotion ? 'true' : 'false');
-            }, [settings.reduceMotion]);
-
-            useEffect(() => {
                 lucide.createIcons();
             }, [currentPage, phase]);
 
@@ -3881,11 +3893,10 @@ Cookieによりブラウザを識別できる場合がありますが、Cookie�
                 const payload = {
                     version: 1,
                     flags,
-                    seenEndings,
-                    settings
+                    seenEndings
                 };
                 localStorage.setItem(SAVE_KEY, JSON.stringify(payload));
-            }, [flags, seenEndings, settings, isLoaded]);
+            }, [flags, seenEndings, isLoaded]);
 
             const unlockFlag = useCallback((flagId) => {
                 setFlags(prev => {
@@ -3939,7 +3950,6 @@ Cookieによりブラウザを識別できる場合がありますが、Cookie�
                 localStorage.removeItem(SAVE_KEY);
                 setFlags({});
                 setSeenEndings({});
-                setSettings({ reduceMotion: false, muteAudio: false });
                 setEndingResult(null);
                 setPage('home');
             };
@@ -4042,7 +4052,7 @@ Cookieによりブラウザを識別できる場合がありますが、Cookie�
                                 {renderPage()}
                             </div>
                         </main>
-                        <Footer phase={phase} setPage={setPage} settings={settings} setSettings={setSettings} />
+                        <Footer phase={phase} setPage={setPage} />
 
                         {/* Debug UI：Ctrl+Shift+D で表示切替 */}
                         {showDebug && (
